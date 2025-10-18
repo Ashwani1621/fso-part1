@@ -1,5 +1,43 @@
 import { useState } from 'react'
 
+
+const Display = (props) => {
+
+  return (
+  <>
+    <h2>
+      {props.text}
+    </h2>
+    <div>
+      {props.anecdote} 
+    </div>
+    <div>
+      has {props.vote} votes
+    </div>
+  </>
+  )
+}
+const Rated = (props) => {
+  if(!props.rated){
+    return(<></>)
+  }
+  return (
+  <>
+    <h2>
+      {props.text}
+    </h2>
+    <div>
+      {props.anecdote} 
+    </div>
+    <div>
+      has {props.vote} votes
+    </div>
+  </>
+  )
+}
+
+
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,27 +52,27 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
-
-
+  const [max, setMax] = useState(0)
+  const [rated, setRated] = useState(false)
   const handleNext =  () =>{
      setSelected(Math.floor(Math.random()* anecdotes.length))
+     
   }
 
   const handleVote = () => {
     const copy = [...votes]
     copy[selected] += 1
     setVotes(copy)
+    const maxIndex = copy.indexOf(Math.max(...copy))
+    setMax(maxIndex)
+    setRated(true)
   }
   return (<>
   
-    <div>
-      {anecdotes[selected]} 
-    </div>
-    <div>
-      has {votes[selected]} votes
-    </div>
+    <Display text="Anecdote of the Day" anecdote={anecdotes[selected]} vote={votes[selected]}/>
     <button onClick={handleVote}>vote</button>
     <button onClick={handleNext}>Next Anecdote</button>
+    <Rated text="Most Voted Anecdote" anecdote={anecdotes[max]} vote={votes[max]} rated = {rated} />
   </>
   )
 }
